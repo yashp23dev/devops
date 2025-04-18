@@ -1,7 +1,7 @@
 pipeline{
 
    agent any
-   environmenyt {
+   environment {
 
      RELEASE='20.04'
 
