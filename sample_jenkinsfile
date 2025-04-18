@@ -1,0 +1,71 @@
+pipeline{
+   
+   agent any
+     
+     environment{
+
+           MY_ENV_VAR = 'Custom Value'
+     }
+
+     stages{
+      
+         stage('Checkout') {
+  
+             steps{
+               
+                script{
+ 
+                   def gitRepoUrl = 'https://github.com/yashp23dev/Jenkins_Upgradev3.git'
+                   
+                   checkout([$class: 'GitSCM',
+                       branches: [[name: '*/master']],
+                       userRemoteConfigs: [[url: gitRepoUrl]],
+                       extensions: [[$class: 'CleanBeforeCheckout'], [$class: 'CloneOption', noTags: false, shallow: true, depth: 1]]
+                   ])
+                }
+             }
+         }
+
+         stage('Build') {
+
+             steps {
+
+               sh'''
+               ls
+               echo "In Build Step"
+               '''
+             }
+         }
+
+         stage('Test') {
+           
+           steps {
+             
+             sh 'echo "In the test step"'
+           }
+         }
+
+         stage('Deploy') {
+          
+            steps{
+               
+              sh 'echo "Value of my ENV variable is "$MY_ENV_VAR""'
+
+            }
+         }
+     }
+
+     post {
+      
+        success {
+           
+           echo 'Pipeline Successful!!'
+        }
+ 
+        failure {
+           
+           echo 'pipeline failed!'
+        }
+     }
+  
+}
