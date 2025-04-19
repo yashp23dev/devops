@@ -1,13 +1,13 @@
 pipeline{
 
    agent any
-   environmenyt {
+   environment {
 
      RELEASE='20.04'
 
    }
    
-   STAGES {
+   stages {
     
       stage('Build') {
 
