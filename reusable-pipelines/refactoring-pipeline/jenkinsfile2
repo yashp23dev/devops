@@ -1,0 +1,79 @@
+pipeline{
+   
+     agent any
+    
+     environment {
+        
+        VERSION = '0.1.0'
+        RELEASE_VERSION = 'R.2'
+     }
+     
+     stages {
+
+        stage('Audit tools') {
+	  
+	  steps {
+	  
+	     sh '''
+
+		git version
+		
+		java -version
+
+		mvn -version
+	    '''  
+	  }
+	}
+
+	stage('Checkout code'){
+
+	  steps{
+
+	     script {
+
+		def gitRepoUrl = 'https://github.com/anshulc55/Jenkins_Upgradev3.git'
+
+		checkout([$class: 'GitSCM',
+		   branches: [[name: '*/master']],
+		   userRemoteConfigs: [[url: gitRepoUrl]],
+		   extensions: [[$class: 'CleanBeforeCheckout'],[$class: 'CloneOption', noTags: false, shallow: true, depth: 1]]
+		])
+	     }
+	  }
+	}
+
+        stage('Unit Test') {
+	
+	   steps {
+             
+             dir('./java-tomcat-sample') {
+	     
+	     sh '''
+		echo "Executing Unite Tests..."
+		mvn test
+		'''
+	     }
+	   }
+	}
+
+	stage('Build') {
+	
+	  steps{
+	  
+	    echo "Building version: ${VERSION} with suffix: ${RELEASE_VERSION}"
+	    echo 'Mention your application Build Code here!!!'
+            dir('./java-tomcat-sample'){
+	    
+		ssh '''
+		    
+		    mvn versions:set -DnewVersion="${VERSION}"-SNAPSHOT
+		    mvn versions:update-child-modules
+		    mvn clean package
+		'''
+	    }
+	  }
+	}
+     }
+
+    
+}
