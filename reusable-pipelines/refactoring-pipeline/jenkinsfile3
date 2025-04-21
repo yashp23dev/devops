@@ -92,7 +92,7 @@ pipeline {
 
 			when {
 
-				expression { return param.RELEASE}
+				expression { return params.RELEASE}
 			}
 
 			steps {
