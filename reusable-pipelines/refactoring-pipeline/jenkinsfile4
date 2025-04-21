@@ -16,6 +16,14 @@ pipeline {
             }
         }
 
+         stage('checkout Repo') {
+
+            steps {
+
+                 gitcheckout()
+            }
+        }
+
         stage('Unit Test') {
             steps {
                 dir('./java-tomcat-sample') {
@@ -80,4 +88,18 @@ void packageApplication() {
         mvn versions:update-child-modules
         mvn clean package
     '''
+}
+
+void gitcheckout() {
+
+ script {
+
+				def gitRepoUrl = 'https://github.com/yashp23dev/Jenkins_Upgradev3.git'
+
+				checkout([$class: 'GitSCM',
+					   branches: [[name: '*/master']],
+					   userRemoteConfigs: [[url: gitRepoUrl]],
+					   extensions: [[$class: 'CleanBeforeCheckout'],[$class: 'CloneOption', noTags: false, shallow: true, depth: 1]]
+					])
+			     }
 }
