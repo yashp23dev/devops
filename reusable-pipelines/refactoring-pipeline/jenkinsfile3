@@ -30,6 +30,23 @@ pipeline {
 			}
 		}
 
+                stage('Checkout code'){
+
+			  steps{
+
+			     script {
+
+				def gitRepoUrl = 'https://github.com/yashp23dev/Jenkins_Upgradev3.git'
+
+				checkout([$class: 'GitSCM',
+					   branches: [[name: '*/master']],
+					   userRemoteConfigs: [[url: gitRepoUrl]],
+					   extensions: [[$class: 'CleanBeforeCheckout'],[$class: 'CloneOption', noTags: false, shallow: true, depth: 1]]
+					])
+			     }
+			  }
+		}
+
 		stage('unit Test') {
 
 			steps {
