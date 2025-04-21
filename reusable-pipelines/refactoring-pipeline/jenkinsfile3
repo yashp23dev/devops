@@ -3,7 +3,7 @@ pipeline {
   
 	agent any
 
-	PARAMETERS {
+	parameters {
 
 		booleanParam(name: 'Release', defaultValue: false, description: 'Is this a Release Candidate?')
 	}
