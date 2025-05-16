@@ -2,7 +2,7 @@ pipeline{
 
 	agent{
         
-		doker{
+		docker{
 
 			image: 'maven:latest'
 			args '-u root'
